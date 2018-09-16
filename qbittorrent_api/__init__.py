@@ -18,11 +18,10 @@ def get_torrents(status='all'):
 
 def post_torrent(magnet, download_path):
     r = requests.post(
-            '{}/api/v2/torrents/add'.format(HOST),
+            '{}/command/download'.format(HOST),
             data=dict(
                 urls=magnet,
                 savepath=download_path
             )
     )
     r.raise_for_status()
-
