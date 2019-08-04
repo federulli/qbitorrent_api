@@ -1,6 +1,7 @@
+import os
 import requests
 
-HOST = 'http://127.0.0.1:8080'
+HOST = f'http://{os.environ["QBITTORRENT_HOST"]}:8080'
 
 
 def get_torrents():
