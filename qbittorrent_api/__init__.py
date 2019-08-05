@@ -1,20 +1,22 @@
 import os
 import requests
 
-HOST = f'http://{os.environ["QBITTORRENT_HOST"]}:8080'
-USERNAME = os.environ.get("QBITTORRENT_USERNAME")
-PASSWORD = os.environ.get("QBITTORRENT_PASSWORD")
-
 s = requests.Session()
 
 
+def get_host():
+    return f'http://{os.environ["QBITTORRENT_HOST"]}:8080'
+
+
 def login():
-    if USERNAME and PASSWORD:
+    username = os.environ.get("QBITTORRENT_USERNAME")
+    password = os.environ.get("QBITTORRENT_PASSWORD")
+    if username and password:
         r = s.post(
-            f'{HOST}/login',
+            f'{get_host()}/login',
             data=dict(
-                username=USERNAME,
-                password=PASSWORD
+                username=username,
+                password=password
             )
         )
         r.raise_for_status()
@@ -23,7 +25,7 @@ def login():
 def get_torrents():
     login()
     r = s.get(
-        '{}/query/torrents'.format(HOST)
+        f'{get_host()}/query/torrents'
     )
     r.raise_for_status()
     return r.json()
@@ -32,7 +34,7 @@ def get_torrents():
 def post_torrent(magnet, download_path):
     login()
     r = s.post(
-        '{}/command/download'.format(HOST),
+        f'{get_host()}/command/download',
         data=dict(
             urls=magnet,
             savepath=download_path
@@ -48,5 +50,5 @@ def delete_completed_torrent():
         torrent["hash"]
         for torrent in torrents if torrent['state'] in ["uploading", "stalledUP", "queuedUP"]
     )
-    r = s.post("{}/command/delete".format(HOST), data=dict(hashes=hashes))
+    r = s.post(f"{get_host()}/command/delete", data=dict(hashes=hashes))
     r.raise_for_status()
