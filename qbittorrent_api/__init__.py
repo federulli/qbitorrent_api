@@ -52,3 +52,14 @@ def delete_completed_torrent():
     )
     r = s.post(f"{get_host()}/command/delete", data=dict(hashes=hashes))
     r.raise_for_status()
+
+
+def delete_all_torrents():
+    login()
+    torrents = get_torrents()
+    hashes = "|".join(
+        torrent["hash"]
+        for torrent in torrents
+    )
+    r = s.post(f"{get_host()}/command/delete", data=dict(hashes=hashes))
+    r.raise_for_status()
