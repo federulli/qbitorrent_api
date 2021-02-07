@@ -48,7 +48,7 @@ def delete_completed_torrent():
     torrents = get_torrents()
     hashes = "|".join(
         torrent["hash"]
-        for torrent in torrents if torrent['state'] in ["uploading", "stalledUP", "queuedUP"]
+        for torrent in torrents if torrent['state'] in ["uploading", "stalledUP", "queuedUP", 'forcedUP']
     )
     r = s.post(f"{get_host()}/command/delete", data=dict(hashes=hashes))
     r.raise_for_status()
